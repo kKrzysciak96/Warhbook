@@ -6,5 +6,6 @@ data class SignUpScreenState(
     val repeatedPassword: String = "",
     val isPasswordVisible: Boolean = false
 ) {
-    val areThePasswordsTheSame = password == repeatedPassword
+    val isSignUpButtonEnabled
+        get() = password == repeatedPassword && email.isNotBlank() && password.isNotBlank()
 }

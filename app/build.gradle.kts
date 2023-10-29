@@ -55,7 +55,6 @@ android {
 
 dependencies {
 
-
     implementation(Compose.compiler)
     implementation(platform(Compose.composeBoom))
     implementation(Compose.ui)
@@ -71,10 +70,13 @@ dependencies {
     implementation(DaggerHilt.hiltAndroid)
     kapt(DaggerHilt.hiltCompiler)
 
-
     implementation(project(Modules.auth_data))
     implementation(project(Modules.auth_domain))
     implementation(project(Modules.auth_presentation))
+
+    implementation(project(Modules.user_data))
+    implementation(project(Modules.user_domain))
+    implementation(project(Modules.user_presentation))
 
 
     implementation(AndroidX.coreKtx)

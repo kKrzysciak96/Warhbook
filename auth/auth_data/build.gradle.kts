@@ -11,10 +11,8 @@ android {
 }
 
 dependencies {
-    implementation(platform(Firebase.firebaseBom))
-    implementation(Firebase.firebaseAuth)
-    implementation(Firebase.firebaseFirestore)
-    implementation(Firebase.firebaseStorage)
+
     implementation(project(Modules.core_data))
+    implementation(project(Modules.core_domain))
     implementation(project(Modules.auth_domain))
 }

@@ -11,6 +11,7 @@ import com.eltescode.auth_domain.use_cases.PasswordsValidator
 import com.eltescode.auth_domain.utils.EmailAndPasswordCredentials
 import com.eltescode.auth_presentation.utils.SignUpScreenEvent
 import com.eltescode.auth_presentation.utils.SignUpScreenState
+import com.eltescode.core_domain.utils.Result
 import com.eltescode.core_ui.R
 import com.eltescode.core_ui.utils.UiEvent
 import com.eltescode.core_ui.utils.UiText
@@ -53,9 +54,9 @@ class SignUpViewModel @Inject constructor(
 
             is SignUpScreenEvent.OnSignUpClick -> {
                 job = null
-                val result = passwordsValidator(state.password, state.repeatedPassword)
+                val passwordResult = passwordsValidator(state.password, state.repeatedPassword)
 
-                when (result) {
+                when (passwordResult) {
                     PasswordResult.BlankPassword -> {
                         job = null
                         job = viewModelScope.launch {
@@ -76,12 +77,28 @@ class SignUpViewModel @Inject constructor(
                             password = state.password
                         )
                         job = viewModelScope.launch {
-                            authRepository.signUp(credentials)
-                            _uiEvent.send(UiEvent.Success)
+                            val signUpResult = authRepository.signUp(credentials)
+
+                            when (signUpResult) {
+                                is Result.Error -> {
+                                    _uiEvent.send(
+                                        UiEvent.ShowSnackBar(
+                                            UiText.DynamicString(
+                                                signUpResult.message.toString()
+                                            )
+                                        )
+                                    )
+                                }
+
+                                Result.Success -> {
+                                    _uiEvent.send(UiEvent.Success)
+                                }
+                            }
                         }
                     }
                 }
             }
+
         }
     }
 }

@@ -20,6 +20,10 @@
             <option value="$PROJECT_DIR$/core_data" />
             <option value="$PROJECT_DIR$/core_domain" />
             <option value="$PROJECT_DIR$/core_ui" />
+            <option value="$PROJECT_DIR$/user" />
+            <option value="$PROJECT_DIR$/user/user_data" />
+            <option value="$PROJECT_DIR$/user/user_domain" />
+            <option value="$PROJECT_DIR$/user_presentation" />
           </set>
         </option>
       </GradleProjectSettings>
