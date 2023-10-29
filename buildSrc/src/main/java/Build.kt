@@ -8,6 +8,6 @@ object Build {
     const val hiltAndroidGradlePlugin = "com.google.dagger:hilt-android-gradle-plugin:$hiltAndroidGradlePluginVersion"
 
     private const val googleServicesPluginVersion = "4.4.0"
-    const val googleServicesPlugin = "com.google.gms.google-services:$googleServicesPluginVersion"
+    const val googleServicesPlugin = "com.google.gms:google-services:$googleServicesPluginVersion"
 
 }

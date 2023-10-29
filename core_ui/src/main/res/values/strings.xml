@@ -1,0 +1,9 @@
+<resources>
+    <string name="blank_password">Password can not be empty</string>
+    <string name="different_passwords">Passwords are not the same</string>
+    <string name="register_header">Register</string>
+    <string name="enter_email_label">Enter email</string>
+    <string name="enter_password_label">Enter Password</string>
+    <string name="repeat_password_label">Repeat Password</string>
+    <string name="sign_up">Sign Up</string>
+</resources>
