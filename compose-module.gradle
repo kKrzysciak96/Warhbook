@@ -15,6 +15,14 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
+
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion Compose.composeCompilerVersion
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -36,10 +44,12 @@ dependencies {
     implementation(Compose.compiler)
     implementation(platform(Compose.composeBoom))
     implementation(Compose.ui)
+    debugImplementation(Compose.debugUi)
     implementation(Compose.uiGraphics)
     implementation(Compose.uiToolingPreview)
     implementation(Compose.hiltNavigationCompose)
     implementation(Compose.material3)
+    implementation(Compose.materialIconsExtended)
     implementation(Compose.runtime)
     implementation(Compose.navigation)
     implementation(Compose.viewModelCompose)

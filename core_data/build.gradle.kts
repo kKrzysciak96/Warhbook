@@ -10,4 +10,8 @@ android {
 }
 
 dependencies {
+    api(platform(Firebase.firebaseBom))
+    api(Firebase.firebaseAuth)
+    api(Firebase.firebaseFirestore)
+    api(Firebase.firebaseStorage)
 }

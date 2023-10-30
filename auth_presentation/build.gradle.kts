@@ -11,5 +11,6 @@ android {
 
 dependencies {
     implementation(project(Modules.core_ui))
+    implementation(project(Modules.core_domain))
     implementation(project(Modules.auth_domain))
 }

@@ -17,9 +17,11 @@ object Compose {
     private const val composeBoomVersion = "2023.03.00"
     const val composeBoom = "androidx.compose:compose-bom:$composeBoomVersion"
     const val ui = "androidx.compose.ui:ui"
+    const val debugUi = "androidx.compose.ui:ui-tooling"
     const val uiGraphics = "androidx.compose.ui:ui-graphics"
     const val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview"
     const val material3 = "androidx.compose.material3:material3"
+    const val materialIconsExtended = "androidx.compose.material:material-icons-extended:$composeVersion"
 
     private const val lifecycleVersion = "2.6.0"
     const val viewModelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"

@@ -1,7 +1,6 @@
 plugins {
     `android-library`
     `kotlin-android`
-    id("com.google.gms.google-services")
 
 }
 
@@ -12,8 +11,8 @@ android {
 }
 
 dependencies {
-    implementation(platform(Firebase.firebaseBom))
-    implementation(project(Modules.core_data))
-    implementation(project(Modules.auth_domain))
 
+    implementation(project(Modules.core_data))
+    implementation(project(Modules.core_domain))
+    implementation(project(Modules.auth_domain))
 }
