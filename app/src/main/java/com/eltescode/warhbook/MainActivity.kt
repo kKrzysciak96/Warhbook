@@ -15,19 +15,23 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.work.WorkManager
 import com.eltescode.auth_presentation.sign_in_screen.SignInScreen
 import com.eltescode.auth_presentation.sign_up_screen.SignUpScreen
+import com.eltescode.core_ui.navigation.Routes
 import com.eltescode.user_presentation.user_screen.UserDataScreen
-import com.eltescode.warhbook.navigation.Routes
 import com.eltescode.warhbook.ui.theme.WarhbookTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 class MainActivity : ComponentActivity() {
+    private lateinit var workManager: WorkManager
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        workManager = WorkManager.getInstance(applicationContext)
+
         setContent {
             val snackBarHostState = remember { SnackbarHostState() }
             val navController = rememberNavController()
@@ -60,10 +64,14 @@ class MainActivity : ComponentActivity() {
                                     })
                             }
                             composable(route = Routes.USER_PROFILE) {
-                                UserDataScreen(onSuccess = {
-                                    navController.popBackStack()
-                                    navController.navigate(route = Routes.SIGN_IN)
-                                })
+                                UserDataScreen(
+                                    workManager = workManager,
+                                    onSuccess = {
+                                        navController.popBackStack()
+                                        navController.navigate(route = Routes.SIGN_IN)
+                                    },
+                                    onNextScreen = {}
+                                )
                             }
                         }
                     })

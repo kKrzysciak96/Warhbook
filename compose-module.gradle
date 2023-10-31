@@ -54,6 +54,7 @@ dependencies {
     implementation(Compose.navigation)
     implementation(Compose.viewModelCompose)
     implementation(Compose.activityCompose)
+    implementation(Coil.coilCompose)
 
     kapt DaggerHilt.hiltCompiler
     implementation DaggerHilt.hiltAndroid

@@ -70,6 +70,10 @@ dependencies {
     implementation(DaggerHilt.hiltAndroid)
     kapt(DaggerHilt.hiltCompiler)
 
+    implementation(project(Modules.core_data))
+    implementation(project(Modules.core_domain))
+    implementation(project(Modules.core_ui))
+
     implementation(project(Modules.auth_data))
     implementation(project(Modules.auth_domain))
     implementation(project(Modules.auth_presentation))
@@ -95,4 +99,5 @@ dependencies {
     kapt(Room.roomCompiler)
     implementation(Room.roomKtx)
     implementation(Room.roomRuntime)
+    implementation(WorkManager.workManager)
 }

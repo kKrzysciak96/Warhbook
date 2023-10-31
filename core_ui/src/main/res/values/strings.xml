@@ -11,4 +11,12 @@
     <string name="sign_up_success">You are successfully registered</string>
     <string name="sign_in_success">You are successfully logged in</string>
     <string name="error_basic">Ops… something went wrong</string>
+    <string name="update_success">Updated</string>
+    <string name="name_label">Name:</string>
+    <string name="surname_label">Surname:</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="enter_surname">Enter Surname</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="choose_from_album">Choose from album</string>
+    <string name="choose_from_internet">Choose from internet</string>
 </resources>
