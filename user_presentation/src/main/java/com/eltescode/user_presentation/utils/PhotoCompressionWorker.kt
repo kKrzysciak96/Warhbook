@@ -8,7 +8,10 @@ import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.work.Constraints
 import androidx.work.CoroutineWorker
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import kotlinx.coroutines.Dispatchers
@@ -96,3 +99,15 @@ private fun checkOrientation(orientation: Int?): Matrix {
     }
     return matrix
 }
+
+fun photoOneTimeWorkRequestBuilder(photoUri: Uri) =
+    OneTimeWorkRequestBuilder<PhotoCompressionWorker>()
+        .setInputData(
+            workDataOf(
+                PhotoCompressionWorker.KEY_PHOTO_TO_COMPRESS_URI to photoUri
+                    .toString(),
+                PhotoCompressionWorker.KEY_PHOTO_COMPRESSION_THRESHOLD to 1024 * 200L
+            )
+        )
+        .setConstraints(Constraints(requiredNetworkType = NetworkType.CONNECTED))
+        .build()

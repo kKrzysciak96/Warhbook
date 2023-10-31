@@ -13,6 +13,7 @@ sealed interface UserDataScreenEvent {
         object OnTakePhotoClick : PhotoDialogEvents
         object OnChooseFromAlbumClick : PhotoDialogEvents
         object OnChooseFromInternetClick : PhotoDialogEvents
+        object OnChooseFromFlickr : PhotoDialogEvents
     }
 
     data class OnFileUriCreated(val uri: Uri) : UserDataScreenEvent

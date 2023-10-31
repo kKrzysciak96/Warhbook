@@ -1,5 +1,7 @@
 package com.eltescode.user_presentation.user_screen
 
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -26,11 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.workDataOf
 import com.eltescode.core_ui.utils.UiEvent
 import com.eltescode.user_presentation.components.BaseCard
 import com.eltescode.user_presentation.components.PhotoChooserDialog
@@ -39,16 +37,19 @@ import com.eltescode.user_presentation.components.SettingsIcon
 import com.eltescode.user_presentation.components.SignOutIcon
 import com.eltescode.user_presentation.components.UserPicture
 import com.eltescode.user_presentation.utils.PhotoCompressionWorker
+import com.eltescode.user_presentation.utils.UriHelper
 import com.eltescode.user_presentation.utils.UserDataScreenEvent
 import com.eltescode.user_presentation.utils.UserDataScreenEvent.PhotoDialogEvents.OnChooseFromAlbumClick
 import com.eltescode.user_presentation.utils.UserDataScreenEvent.PhotoDialogEvents.OnChooseFromInternetClick
 import com.eltescode.user_presentation.utils.UserDataScreenEvent.PhotoDialogEvents.OnTakePhotoClick
 import com.eltescode.user_presentation.utils.UserScreenState
 import com.eltescode.user_presentation.utils.UserScreens
+import com.eltescode.user_presentation.utils.photoOneTimeWorkRequestBuilder
 import java.io.File
 
 @Composable
 fun UserDataScreen(
+    photoUriHelper: UriHelper,
     workManager: WorkManager,
     viewModel: UserDataViewModel = hiltViewModel(),
     onSuccess: () -> Unit,
@@ -64,21 +65,32 @@ fun UserDataScreen(
         onResult = { isPhotoTaken ->
             if (isPhotoTaken) {
                 if (state.photoUri != null) {
-                    val request = OneTimeWorkRequestBuilder<PhotoCompressionWorker>()
-                        .setInputData(
-                            workDataOf(
-                                PhotoCompressionWorker.KEY_PHOTO_TO_COMPRESS_URI to state.photoUri
-                                    .toString(),
-                                PhotoCompressionWorker.KEY_PHOTO_COMPRESSION_THRESHOLD to 1024 * 200L
-                            )
-                        )
-                        .setConstraints(Constraints(requiredNetworkType = NetworkType.CONNECTED))
-                        .build()
+                    val request = photoOneTimeWorkRequestBuilder(state.photoUri)
                     viewModel.updateWorkId(request.id)
                     workManager.enqueue(request)
                 }
             }
         })
+
+    val selectPhotoFromAlbumContract = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument(),
+        onResult = { photoUri ->
+            if (photoUri != null) {
+                val request = photoOneTimeWorkRequestBuilder(photoUri)
+                viewModel.updateWorkId(request.id)
+                workManager.enqueue(request)
+            }
+        }
+    )
+    LaunchedEffect(key1 = true, block = {
+        photoUriHelper.photoUri?.let { photoUri ->
+            val request = photoOneTimeWorkRequestBuilder(photoUri)
+            viewModel.updateWorkId(request.id)
+            workManager.enqueue(request)
+            photoUriHelper.photoUri = null
+        }
+    })
+
 
     LaunchedEffect(key1 = workResult?.outputData) {
         if (workResult?.outputData != null) {
@@ -111,8 +123,15 @@ fun UserDataScreen(
     LaunchedEffect(true) {
         viewModel.photoEvent.collect { event ->
             when (event) {
-                OnChooseFromAlbumClick -> {}
-                OnChooseFromInternetClick -> {}
+                OnChooseFromAlbumClick -> {
+                    selectPhotoFromAlbumContract.launch(arrayOf("image/*"))
+                }
+
+                OnChooseFromInternetClick -> {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"))
+                    context.startActivity(intent)
+                }
+
                 OnTakePhotoClick -> {
                     val photoFile =
                         File(context.filesDir, "IMG_${System.currentTimeMillis()}.JPG")
@@ -124,6 +143,10 @@ fun UserDataScreen(
                         )
                     viewModel.onEvent(UserDataScreenEvent.OnFileUriCreated(photoUri))
                     takePhotoContract.launch(photoUri)
+                }
+
+                UserDataScreenEvent.PhotoDialogEvents.OnChooseFromFlickr -> {
+
                 }
             }
         }
@@ -226,3 +249,6 @@ fun UserDataScreen(state: UserScreenState, onEvent: (UserDataScreenEvent) -> Uni
 private fun UserDataScreen() {
     UserDataScreen(UserScreenState(null)) {}
 }
+
+
+
