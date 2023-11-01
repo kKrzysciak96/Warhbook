@@ -63,7 +63,10 @@ fun SignInScreen(
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                UiEvent.OnNavigateUp -> {}
+                UiEvent.OnNavigateUp -> {
+
+                }
+
                 is UiEvent.ShowSnackBar -> {
                     snackBarHostState.currentSnackbarData?.dismiss()
                     snackBarHostState.showSnackbar(event.message.asString(context))

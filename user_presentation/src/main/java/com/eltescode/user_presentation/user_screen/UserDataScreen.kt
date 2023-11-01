@@ -1,7 +1,6 @@
 package com.eltescode.user_presentation.user_screen
 
-import android.content.Intent
-import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -26,10 +25,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.work.WorkManager
-import com.eltescode.core_ui.utils.UiEvent
 import com.eltescode.user_presentation.components.BaseCard
 import com.eltescode.user_presentation.components.PhotoChooserDialog
 import com.eltescode.user_presentation.components.SettingsDialog
@@ -37,24 +34,22 @@ import com.eltescode.user_presentation.components.SettingsIcon
 import com.eltescode.user_presentation.components.SignOutIcon
 import com.eltescode.user_presentation.components.UserPicture
 import com.eltescode.user_presentation.utils.PhotoCompressionWorker
-import com.eltescode.user_presentation.utils.UriHelper
 import com.eltescode.user_presentation.utils.UserDataScreenEvent
-import com.eltescode.user_presentation.utils.UserDataScreenEvent.PhotoDialogEvents.OnChooseFromAlbumClick
-import com.eltescode.user_presentation.utils.UserDataScreenEvent.PhotoDialogEvents.OnChooseFromInternetClick
-import com.eltescode.user_presentation.utils.UserDataScreenEvent.PhotoDialogEvents.OnTakePhotoClick
 import com.eltescode.user_presentation.utils.UserScreenState
 import com.eltescode.user_presentation.utils.UserScreens
+import com.eltescode.user_presentation.utils.handlePhotoDialogEvents
+import com.eltescode.user_presentation.utils.handleUiEvents
 import com.eltescode.user_presentation.utils.photoOneTimeWorkRequestBuilder
 import java.io.File
 
 @Composable
 fun UserDataScreen(
-    photoUriHelper: UriHelper,
     workManager: WorkManager,
     viewModel: UserDataViewModel = hiltViewModel(),
     onSuccess: () -> Unit,
-    onNextScreen: (String) -> Unit
+    onNextScreen: (String) -> Unit,
 ) {
+
     val state = viewModel.state
     val context = LocalContext.current
     val workResult = viewModel.workId?.let { id ->
@@ -67,7 +62,11 @@ fun UserDataScreen(
                 if (state.photoUri != null) {
                     val request = photoOneTimeWorkRequestBuilder(state.photoUri)
                     viewModel.updateWorkId(request.id)
-                    workManager.enqueue(request)
+                    viewModel.onEvent(
+                        UserDataScreenEvent.PhotoDialogEvents.OnWorkManagerEnqueue(
+                            request
+                        )
+                    )
                 }
             }
         })
@@ -78,18 +77,14 @@ fun UserDataScreen(
             if (photoUri != null) {
                 val request = photoOneTimeWorkRequestBuilder(photoUri)
                 viewModel.updateWorkId(request.id)
-                workManager.enqueue(request)
+                viewModel.onEvent(UserDataScreenEvent.PhotoDialogEvents.OnWorkManagerEnqueue(request))
             }
         }
     )
-    LaunchedEffect(key1 = true, block = {
-        photoUriHelper.photoUri?.let { photoUri ->
-            val request = photoOneTimeWorkRequestBuilder(photoUri)
-            viewModel.updateWorkId(request.id)
-            workManager.enqueue(request)
-            photoUriHelper.photoUri = null
-        }
-    })
+
+    LaunchedEffect(key1 = true) {
+        Log.d("CYCLE compose", "${viewModel.uriHelper.oldUri}")
+    }
 
 
     LaunchedEffect(key1 = workResult?.outputData) {
@@ -107,48 +102,23 @@ fun UserDataScreen(
 
     LaunchedEffect(true) {
         viewModel.uiEvent.collect { event ->
-            when (event) {
-                UiEvent.OnNavigateUp -> Unit
-                is UiEvent.OnNextScreen -> {
-                    event.route?.let { onNextScreen(it) }
-                }
-
-                is UiEvent.ShowSnackBar -> {}
-                UiEvent.Success -> {
-                    onSuccess()
-                }
-            }
+            handleUiEvents(
+                event,
+                onNextScreen,
+                onSuccess
+            )
         }
     }
     LaunchedEffect(true) {
         viewModel.photoEvent.collect { event ->
-            when (event) {
-                OnChooseFromAlbumClick -> {
-                    selectPhotoFromAlbumContract.launch(arrayOf("image/*"))
-                }
-
-                OnChooseFromInternetClick -> {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"))
-                    context.startActivity(intent)
-                }
-
-                OnTakePhotoClick -> {
-                    val photoFile =
-                        File(context.filesDir, "IMG_${System.currentTimeMillis()}.JPG")
-                    val photoUri =
-                        FileProvider.getUriForFile(
-                            context,
-                            "com.eltescode.warhbook_custom_file_provider",
-                            photoFile
-                        )
-                    viewModel.onEvent(UserDataScreenEvent.OnFileUriCreated(photoUri))
-                    takePhotoContract.launch(photoUri)
-                }
-
-                UserDataScreenEvent.PhotoDialogEvents.OnChooseFromFlickr -> {
-
-                }
-            }
+            handlePhotoDialogEvents(
+                context,
+                event,
+                selectPhotoFromAlbumContract,
+                takePhotoContract,
+                viewModel::onEvent,
+                workManager
+            )
         }
     }
     UserDataScreen(

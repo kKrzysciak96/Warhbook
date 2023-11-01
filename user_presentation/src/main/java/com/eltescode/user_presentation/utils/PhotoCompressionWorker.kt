@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.net.toUri
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
@@ -19,7 +20,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
+import java.net.URL
 import kotlin.math.roundToInt
+
 
 class PhotoCompressionWorker(private val context: Context, private val params: WorkerParameters) :
     CoroutineWorker(context, params) {
@@ -29,8 +33,23 @@ class PhotoCompressionWorker(private val context: Context, private val params: W
 
         return withContext(Dispatchers.IO) {
 
-            val stringUri = params.inputData.getString(KEY_PHOTO_TO_COMPRESS_URI)
+            var stringUri = params.inputData.getString(KEY_PHOTO_TO_COMPRESS_URI)
+
+            if (stringUri?.take(4) == "http") {
+                val url = URL(stringUri)
+                val file = File(context.filesDir, "tempPhoto")
+
+                try {
+                    val fos = FileOutputStream(file)
+                    fos.write(url.readBytes())
+                    fos.close()
+                } catch (e: Exception) {
+                    return@withContext Result.failure()
+                }
+                stringUri = file.toUri().toString()
+            }
             Log.d("WORKER", "$stringUri")
+
             val compressionThresholdInBytes =
                 params.inputData.getLong(KEY_PHOTO_COMPRESSION_THRESHOLD, 0L)
 

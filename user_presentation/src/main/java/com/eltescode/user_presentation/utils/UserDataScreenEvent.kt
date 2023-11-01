@@ -1,6 +1,7 @@
 package com.eltescode.user_presentation.utils
 
 import android.net.Uri
+import androidx.work.OneTimeWorkRequest
 
 sealed interface UserDataScreenEvent {
     object OnSignOut : UserDataScreenEvent
@@ -14,6 +15,7 @@ sealed interface UserDataScreenEvent {
         object OnChooseFromAlbumClick : PhotoDialogEvents
         object OnChooseFromInternetClick : PhotoDialogEvents
         object OnChooseFromFlickr : PhotoDialogEvents
+        data class OnWorkManagerEnqueue(val request: OneTimeWorkRequest) : PhotoDialogEvents
     }
 
     data class OnFileUriCreated(val uri: Uri) : UserDataScreenEvent

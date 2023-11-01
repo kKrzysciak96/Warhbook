@@ -59,7 +59,7 @@ class SearchPhotoViewModel @Inject constructor(private val searchPhotosUseCase: 
                         newChar = '|'
                     )
 
-                    _uiEvent.send(UiEvent.OnNextScreen(Routes.USER_PROFILE + "/$url"))
+                    _uiEvent.send(UiEvent.OnNextScreen(Routes.USER_PROFILE + "?photo_url=$url"))
                 }
             }
 

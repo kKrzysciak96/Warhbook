@@ -15,6 +15,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,20 +30,27 @@ import com.eltescode.user_presentation.user_screen.UserDataScreen
 import com.eltescode.user_presentation.utils.UriHelper
 import com.eltescode.warhbook.ui.theme.WarhbookTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 class MainActivity : ComponentActivity() {
-    private lateinit var workManager: WorkManager
+
+    @Inject
+    lateinit var workManager: WorkManager
 
     @Inject
     lateinit var uriHelper: UriHelper
 
+    private var job: Job? = null
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        workManager = WorkManager.getInstance(applicationContext)
+
 
         setContent {
             val snackBarHostState = remember { SnackbarHostState() }
@@ -64,7 +72,7 @@ class MainActivity : ComponentActivity() {
                                     onNextScreen = { navController.navigate(Routes.SIGN_UP) },
                                     onSuccess = {
                                         navController.popBackStack()
-                                        navController.navigate(Routes.USER_PROFILE + "/{}")
+                                        navController.navigate(Routes.USER_PROFILE)
                                     })
                             }
                             composable(route = Routes.SIGN_UP) {
@@ -72,22 +80,20 @@ class MainActivity : ComponentActivity() {
                                     snackBarHostState = snackBarHostState,
                                     onSuccess = {
                                         navController.popBackStack(Routes.SIGN_IN, true)
-                                        navController.navigate(Routes.USER_PROFILE + "/{}")
+                                        navController.navigate(Routes.USER_PROFILE)
                                     })
                             }
                             composable(
-                                route = Routes.USER_PROFILE + "/{photo_url}",
+                                route = Routes.USER_PROFILE + "?photo_url={photo_url}",
                                 arguments = listOf(navArgument("photo_url") {
                                     type = NavType.StringType
+                                    nullable = true
                                 }
                                 )
                             ) {
-                                val decodedUrl = it.arguments?.getString("photo_url")
-                                    ?.replace(oldChar = '|', newChar = '/')
-                                Log.d("RESULT NAV DEC", decodedUrl.toString())
-                                uriHelper.photoUri = Uri.parse(decodedUrl)
+                                createUriFromNavArguments(it)
+                                Log.d("CYCLE main compose", "${uriHelper.oldUri}")
                                 UserDataScreen(
-                                    photoUriHelper = uriHelper,
                                     workManager = workManager,
                                     onSuccess = {
                                         navController.popBackStack()
@@ -99,9 +105,8 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(route = Routes.SEARCH_PHOTO) {
-                                SearchPhotoScreen() { route ->
-
-                                    Log.d("RESULT NAV", route)
+                                SearchPhotoScreen { route ->
+                                    navController.popBackStack()
                                     navController.navigate(route)
                                 }
                             }
@@ -113,10 +118,35 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
+        Log.d("CYCLE main compose", "${uriHelper.oldUri}")
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
         val new = intent?.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
-        if (uriHelper.photoUri == null && uriHelper.oldUri != new) {
-            uriHelper.photoUri = new
-            uriHelper.oldUri = new
+        job = null
+        job = CoroutineScope(Job()).launch {
+            uriHelper.uriFlow.emit(new)
         }
+    }
+
+    private fun createUriFromNavArguments(navBackStackEntry: NavBackStackEntry) {
+        val decodedUrl = navBackStackEntry.arguments?.getString("photo_url")
+            ?.replace(oldChar = '|', newChar = '/')
+        decodedUrl?.let { url ->
+            val newUri = Uri.parse(url)
+            if (uriHelper.oldUri != newUri) {
+                uriHelper.oldUri = newUri
+                job = null
+                job = CoroutineScope(Job()).launch {
+                    uriHelper.uriFlow.emit(Uri.parse(url))
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job = null
     }
 }
