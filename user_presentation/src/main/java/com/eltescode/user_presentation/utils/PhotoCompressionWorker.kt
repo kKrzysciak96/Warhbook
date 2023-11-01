@@ -7,6 +7,7 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
@@ -29,7 +30,7 @@ class PhotoCompressionWorker(private val context: Context, private val params: W
         return withContext(Dispatchers.IO) {
 
             val stringUri = params.inputData.getString(KEY_PHOTO_TO_COMPRESS_URI)
-
+            Log.d("WORKER", "$stringUri")
             val compressionThresholdInBytes =
                 params.inputData.getLong(KEY_PHOTO_COMPRESSION_THRESHOLD, 0L)
 

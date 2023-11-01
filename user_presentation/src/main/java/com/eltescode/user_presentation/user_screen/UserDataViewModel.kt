@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eltescode.core_domain.utils.Result
 import com.eltescode.core_ui.R
+import com.eltescode.core_ui.navigation.Routes
 import com.eltescode.core_ui.utils.UiEvent
 import com.eltescode.core_ui.utils.UiText
 import com.eltescode.user_domain.repository.UserDataRepository
@@ -134,6 +135,13 @@ class UserDataViewModel @Inject constructor(
 
             is UserDataScreenEvent.OnFileUriCreated -> {
                 state = state.copy(photoUri = event.uri)
+            }
+
+            UserDataScreenEvent.PhotoDialogEvents.OnChooseFromFlickr -> {
+                state = state.copy(isChoosePhotoDialogVisible = false)
+                job = null
+                job =
+                    viewModelScope.launch { _uiEvent.send(UiEvent.OnNextScreen(Routes.SEARCH_PHOTO)) }
             }
         }
     }

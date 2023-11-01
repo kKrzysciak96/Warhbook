@@ -82,6 +82,10 @@ dependencies {
     implementation(project(Modules.user_domain))
     implementation(project(Modules.user_presentation))
 
+    implementation(project(Modules.photo_data))
+    implementation(project(Modules.photo_domain))
+    implementation(project(Modules.photo_presentation))
+
 
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.lifecycleRuntime)

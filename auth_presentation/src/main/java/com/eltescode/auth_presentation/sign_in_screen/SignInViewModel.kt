@@ -39,7 +39,7 @@ class SignInViewModel @Inject constructor(
             SignInScreenEvent.OnGoToSignUpScreenClick -> {
                 job = null
                 job = viewModelScope.launch {
-                    _uiEvent.send(UiEvent.OnNextScreen)
+                    _uiEvent.send(UiEvent.OnNextScreen())
                 }
             }
 

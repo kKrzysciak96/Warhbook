@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoAlbum
 import androidx.compose.material.icons.filled.WebAsset
 import androidx.compose.material3.Icon
@@ -72,6 +73,16 @@ fun PhotoChooserDialog(
                 ) {
                     onDialogDismiss()
                     onEvent(UserDataScreenEvent.PhotoDialogEvents.OnChooseFromInternetClick)
+                }
+                ChooserRow(
+                    icon = Icons.Default.Photo,
+                    text = stringResource(id = R.string.choose_from_flickr),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 32.dp, start = 16.dp, end = 16.dp),
+                ) {
+                    onDialogDismiss()
+                    onEvent(UserDataScreenEvent.PhotoDialogEvents.OnChooseFromFlickr)
                 }
             }
         }

@@ -109,8 +109,8 @@ fun UserDataScreen(
         viewModel.uiEvent.collect { event ->
             when (event) {
                 UiEvent.OnNavigateUp -> Unit
-                UiEvent.OnNextScreen -> {
-                    onNextScreen("")
+                is UiEvent.OnNextScreen -> {
+                    event.route?.let { onNextScreen(it) }
                 }
 
                 is UiEvent.ShowSnackBar -> {}

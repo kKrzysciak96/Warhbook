@@ -9,6 +9,10 @@ object Modules {
     const val user_data = ":user:user_data"
     const val user_presentation = ":user_presentation"
 
+    const val photo_domain = ":photo:photo_domain"
+    const val photo_data = ":photo:photo_data"
+    const val photo_presentation = ":photo_presentation"
+
     const val core_domain = ":core_domain"
     const val core_data = ":core_data"
     const val core_ui = ":core_ui"

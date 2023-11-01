@@ -75,7 +75,7 @@ fun SignInScreen(
                     snackBarHostState.showSnackbar(context.getString(R.string.sign_in_success))
                 }
 
-                UiEvent.OnNextScreen -> {
+                is UiEvent.OnNextScreen -> {
                     onNextScreen()
                 }
             }

@@ -19,4 +19,6 @@
     <string name="take_picture">Take Picture</string>
     <string name="choose_from_album">Choose from album</string>
     <string name="choose_from_internet">Choose from internet</string>
+    <string name="choose_from_flickr">Choose from Flickr</string>
+    <string name="set_profile_picture">Set as profile Picture</string>
 </resources>

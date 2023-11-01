@@ -4,6 +4,7 @@ object Routes {
     const val SIGN_UP = "SIGN_UP"
     const val SIGN_IN = "SIGN_IN"
     const val USER_PROFILE = "USER_PROFILE"
+    const val SEARCH_PHOTO = "SEARCH_PHOTO"
     const val YOUR_SHEETS = "YOUR_SHEETS"
     const val FAVOURITE_PROFESSIONS = "FAVOURITE_PROFESSIONS"
     const val FAVOURITE_MAGIC = "FAVOURITE_MAGIC"
