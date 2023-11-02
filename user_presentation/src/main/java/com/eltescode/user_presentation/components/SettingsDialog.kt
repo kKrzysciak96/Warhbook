@@ -18,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +39,17 @@ fun SettingsDialog(
     modifier: Modifier = Modifier,
     onEvent: (UserDataScreenEvent) -> Unit
 ) {
-    Dialog(onDismissRequest = { onDialogDismiss() }) {
+    val storedName = rememberSaveable {
+        userName
+    }
+    val storedSurName = rememberSaveable {
+        userSurname
+    }
+    Dialog(onDismissRequest = {
+        onEvent(UserDataScreenEvent.OnNameEntered(storedName))
+        onEvent(UserDataScreenEvent.OnSurnameEntered(storedSurName))
+        onDialogDismiss()
+    }) {
         Box(
             modifier = modifier,
             contentAlignment = Alignment.Center

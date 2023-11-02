@@ -28,6 +28,7 @@ import com.eltescode.core_ui.navigation.Routes
 import com.eltescode.photo_presentation.search_screen.SearchPhotoScreen
 import com.eltescode.user_presentation.user_screen.UserDataScreen
 import com.eltescode.user_presentation.utils.UriHelper
+import com.eltescode.warhbook.splash_screen.SplashScreen
 import com.eltescode.warhbook.ui.theme.WarhbookTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -63,9 +64,16 @@ class MainActivity : ComponentActivity() {
                     content = {
                         NavHost(
                             navController = navController,
-                            startDestination = Routes.SIGN_IN
+                            startDestination = Routes.SPLASH_SCREEN
                         )
                         {
+
+                            composable(route = Routes.SPLASH_SCREEN) {
+                                SplashScreen {
+                                    navController.popBackStack()
+                                    navController.navigate(Routes.SIGN_IN)
+                                }
+                            }
                             composable(route = Routes.SIGN_IN) {
                                 SignInScreen(
                                     snackBarHostState = snackBarHostState,
