@@ -11,4 +11,22 @@
     <string name="sign_up_success">You are successfully registered</string>
     <string name="sign_in_success">You are successfully logged in</string>
     <string name="error_basic">Ops… something went wrong</string>
+    <string name="update_success">Updated</string>
+    <string name="name_label">Name:</string>
+    <string name="surname_label">Surname:</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="enter_surname">Enter Surname</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="choose_from_album">Choose from album</string>
+    <string name="choose_from_internet">Choose from internet</string>
+    <string name="choose_from_flickr">Choose from Flickr</string>
+    <string name="set_profile_picture">Set as profile Picture</string>
+    <string name="notes_screen_name">Notes</string>
+    <string name="your_sheets_screen_name">Your Sheets</string>
+    <string name="favourite_professions_screen_name">Favourite Professions</string>
+    <string name="favourite_magic_screen_name">Favourite Magic</string>
+    <string name="career_screen_name">Career Creator</string>
+    <string name="something_screen_name">Something</string>
+    <string name="new_character_screen_name">New Character</string>
+    <string name="profession_creator_screen_name">Something</string>
 </resources>

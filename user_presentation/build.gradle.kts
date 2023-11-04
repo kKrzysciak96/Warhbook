@@ -13,4 +13,6 @@ dependencies {
     implementation(project(Modules.core_ui))
     implementation(project(Modules.user_domain))
     implementation(project(Modules.core_domain))
+    implementation(WorkManager.workManager)
+    implementation(Compose.composeLiveData)
 }

@@ -22,6 +22,6 @@ object UserDataModule {
         fireStore: FirebaseFirestore,
         storage: FirebaseStorage
     ): UserDataRepository {
-        return UserDataRepositoryImpl(auth)
+        return UserDataRepositoryImpl(auth, fireStore, storage)
     }
 }

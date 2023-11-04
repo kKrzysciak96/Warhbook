@@ -1,6 +1,7 @@
 package com.eltescode.auth_presentation.sign_in_screen
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,14 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
@@ -28,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -40,6 +39,9 @@ import com.eltescode.auth_presentation.components.PasswordTextField
 import com.eltescode.auth_presentation.utils.SignInScreenEvent
 import com.eltescode.auth_presentation.utils.SignInScreenState
 import com.eltescode.core_ui.R
+import com.eltescode.core_ui.components.BoxWithAnimatedBorder
+import com.eltescode.core_ui.components.backgroundBrush
+import com.eltescode.core_ui.components.texFieldColors_1
 import com.eltescode.core_ui.ui.fontFamily_croissant
 import com.eltescode.core_ui.utils.UiEvent
 
@@ -63,7 +65,10 @@ fun SignInScreen(
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                UiEvent.OnNavigateUp -> {}
+                UiEvent.OnNavigateUp -> {
+
+                }
+
                 is UiEvent.ShowSnackBar -> {
                     snackBarHostState.currentSnackbarData?.dismiss()
                     snackBarHostState.showSnackbar(event.message.asString(context))
@@ -75,7 +80,7 @@ fun SignInScreen(
                     snackBarHostState.showSnackbar(context.getString(R.string.sign_in_success))
                 }
 
-                UiEvent.OnNextScreen -> {
+                is UiEvent.OnNextScreen -> {
                     onNextScreen()
                 }
             }
@@ -94,36 +99,39 @@ fun SignInScreen(
     state: SignInScreenState,
     onEvent: (SignInScreenEvent) -> Unit,
 ) {
+
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(backgroundBrush()),
         contentAlignment = Alignment.Center
     ) {
         Button(
             onClick = {
                 onEvent(SignInScreenEvent.AdminOnSignInClick)
             },
-            modifier = Modifier.align(Alignment.TopEnd)
+            modifier = Modifier.align(Alignment.TopEnd),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color.Transparent
+            )
         ) {
             Text(text = "Admin login")
         }
+
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(2.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Card(
+            BoxWithAnimatedBorder(
                 modifier = Modifier
-                    .wrapContentWidth()
-                    .wrapContentHeight()
-                    .padding(2.dp),
-
-                ) {
+                    .size(300.dp)
+            ) {
                 Column(
                     modifier = Modifier
-                        .wrapContentSize()
                         .padding(16.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -138,14 +146,17 @@ fun SignInScreen(
                         value = state.email,
                         onValueChange = { onEvent(SignInScreenEvent.OnEmailEntered(it)) },
                         modifier = Modifier.padding(bottom = 12.dp),
-                        label = { Text(text = stringResource(id = R.string.enter_email_label)) })
+                        label = { Text(text = stringResource(id = R.string.enter_email_label)) },
+                        colors = texFieldColors_1()
+                    )
                     PasswordTextField(
                         password = state.password,
                         isPasswordVisible = state.isPasswordVisible,
                         onPasswordEntered = { onEvent(SignInScreenEvent.OnPasswordEntered(it)) },
                         onShowPasswordClick = { onEvent(SignInScreenEvent.OnShowPasswordClick) },
                         labelText = stringResource(id = R.string.enter_password_label),
-                        modifier = Modifier.padding(bottom = 12.dp)
+                        modifier = Modifier.padding(bottom = 12.dp),
+                        colors = texFieldColors_1()
                     )
                     AuthButton(
                         buttonText = stringResource(id = R.string.sign_in),
