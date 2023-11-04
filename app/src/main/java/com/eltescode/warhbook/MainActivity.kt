@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     content = {
                         NavHost(
                             navController = navController,
-                            startDestination = Routes.SPLASH_SCREEN
+                            startDestination = Routes.SIGN_IN
                         )
                         {
 
@@ -117,6 +117,9 @@ class MainActivity : ComponentActivity() {
                                     navController.popBackStack()
                                     navController.navigate(route)
                                 }
+                            }
+                            composable(route = Routes.NOTES) {
+
                             }
                         }
                     })

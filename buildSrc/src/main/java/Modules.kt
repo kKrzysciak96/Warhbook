@@ -16,4 +16,8 @@ object Modules {
     const val core_domain = ":core_domain"
     const val core_data = ":core_data"
     const val core_ui = ":core_ui"
+
+    const val book_domain = ":book:book_domain"
+    const val book_data = ":book:book_data"
+    const val book_presentation = ":book_presentation"
 }

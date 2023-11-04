@@ -16,6 +16,10 @@
             <option value="$PROJECT_DIR$/auth/auth_data" />
             <option value="$PROJECT_DIR$/auth/auth_domain" />
             <option value="$PROJECT_DIR$/auth_presentation" />
+            <option value="$PROJECT_DIR$/book" />
+            <option value="$PROJECT_DIR$/book/book_data" />
+            <option value="$PROJECT_DIR$/book/book_domain" />
+            <option value="$PROJECT_DIR$/book/book_presentation" />
             <option value="$PROJECT_DIR$/buildSrc" />
             <option value="$PROJECT_DIR$/core_data" />
             <option value="$PROJECT_DIR$/core_domain" />

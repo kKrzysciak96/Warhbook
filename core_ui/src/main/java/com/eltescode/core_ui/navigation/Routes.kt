@@ -12,4 +12,5 @@ object Routes {
     const val NOTES = "NOTES"
     const val NEW_CHARACTER = "NEW_CHARACTER"
     const val ADDITIONAL = "ADDITIONAL"
+    const val PROFESSION_CREATOR = "PROFESSION_CREATOR"
 }

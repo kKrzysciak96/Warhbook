@@ -22,11 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.work.WorkManager
+import com.eltescode.core_ui.components.backgroundShaderBrush
 import com.eltescode.user_presentation.components.BaseCard
 import com.eltescode.user_presentation.components.PhotoChooserDialog
 import com.eltescode.user_presentation.components.SettingsDialog
@@ -130,7 +132,9 @@ fun UserDataScreen(
 @Composable
 fun UserDataScreen(state: UserScreenState, onEvent: (UserDataScreenEvent) -> Unit) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundShaderBrush()),
         contentAlignment = Alignment.Center
     ) {
 
@@ -174,12 +178,12 @@ fun UserDataScreen(state: UserScreenState, onEvent: (UserDataScreenEvent) -> Uni
                 UserScreens.values().forEach {
                     item {
                         BaseCard(
-                            text = it.screenName,
+                            text = stringResource(id = it.screenNameRes),
                             modifier = Modifier
-                                .size(175.dp)
+                                .size(125.dp)
                                 .padding(3.dp)
                                 .clip(RoundedCornerShape(8.dp))
-                                .clickable {},
+                                .clickable { onEvent(UserDataScreenEvent.OnNextScreenClick(it.route)) },
                             fontSize = 18.sp
                         )
                     }

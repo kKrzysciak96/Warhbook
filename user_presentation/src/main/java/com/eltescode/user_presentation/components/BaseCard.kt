@@ -11,6 +11,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -18,11 +19,13 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun BaseCard(
-    text: String, modifier: Modifier = Modifier, fontSize: TextUnit = 32.sp
+    text: String, modifier: Modifier = Modifier, fontSize: TextUnit = 32.sp,
+    containerColor: Color = Color.LightGray
 ) {
     Card(
         modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(containerColor = containerColor.copy(alpha = 0.5f))
     )
     {
         Column(

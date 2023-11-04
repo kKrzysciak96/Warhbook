@@ -1,6 +1,7 @@
 package com.eltescode.warhbook.splash_screen
 
 import android.animation.TimeInterpolator
+import android.annotation.SuppressLint
 import android.view.animation.BounceInterpolator
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -29,18 +30,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.ImageShader
-import androidx.compose.ui.graphics.ShaderBrush
-import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.eltescode.warhbook.R
+import com.eltescode.core_ui.R
+import com.eltescode.core_ui.components.backgroundShaderBrush
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
+
 
 @Composable
 fun SplashScreen(onNextScreen: () -> Unit) {
@@ -87,7 +86,7 @@ fun SplashScreen(onNextScreen: () -> Unit) {
         crackState = 4
         delay(200)
         isVisible.value = false
-        delay(1000)
+        delay(800)
         onNextScreen()
     }
 
@@ -195,13 +194,14 @@ fun HammerImage(
     )
 }
 
+@SuppressLint("UnrememberedMutableState", "UnrememberedAnimatable")
+@Preview
 @Composable
-private fun backgroundShaderBrush(): ShaderBrush {
-    return ShaderBrush(
-        ImageShader(
-            image = ImageBitmap.imageResource(id = R.drawable.splash_background),
-            tileModeX = TileMode.Repeated,
-            tileModeY = TileMode.Repeated
-        )
+private fun SplashScreen() {
+    SplashScreen(
+        isVisible = mutableStateOf(true),
+        crackState = 4,
+        valueOffset = Animatable(0f),
+        valueAngle = Animatable(0f),
     )
 }
