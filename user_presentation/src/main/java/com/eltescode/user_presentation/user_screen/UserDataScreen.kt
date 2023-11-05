@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.work.WorkManager
-import com.eltescode.core_ui.components.backgroundShaderBrush
+import com.eltescode.core_ui.components.silverBackgroundBrush
 import com.eltescode.user_presentation.components.BaseCard
 import com.eltescode.user_presentation.components.PhotoChooserDialog
 import com.eltescode.user_presentation.components.SettingsDialog
@@ -134,7 +134,7 @@ fun UserDataScreen(state: UserScreenState, onEvent: (UserDataScreenEvent) -> Uni
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundShaderBrush()),
+            .background(silverBackgroundBrush()),
         contentAlignment = Alignment.Center
     ) {
 
@@ -155,7 +155,7 @@ fun UserDataScreen(state: UserScreenState, onEvent: (UserDataScreenEvent) -> Uni
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 32.dp, bottom = 16.dp, start = 8.dp, end = 8.dp),
+                .padding(top = 16.dp, bottom = 16.dp, start = 8.dp, end = 8.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

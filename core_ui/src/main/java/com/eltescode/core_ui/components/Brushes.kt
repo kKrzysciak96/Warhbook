@@ -23,7 +23,7 @@ fun backgroundShaderBrush(): ShaderBrush {
 }
 
 @Composable
-fun backgroundBrush(): Brush {
+fun silverBackgroundBrush(): Brush {
     return Brush.linearGradient(
         colors = listOf(Color.White, Color(0XFF979c9f)),
         start = Offset.Zero,

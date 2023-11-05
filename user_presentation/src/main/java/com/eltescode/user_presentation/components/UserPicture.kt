@@ -1,12 +1,8 @@
 package com.eltescode.user_presentation.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -31,16 +28,13 @@ fun UserPicture(
     userName: String,
     userSurname: String,
     modifier: Modifier = Modifier,
+    size: Dp = 150.dp,
     onClick: () -> Unit
 ) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
+
         Box(
-            modifier = Modifier
-                .size(150.dp)
+            modifier = modifier
+                .size(size)
                 .clip(RoundedCornerShape(100.dp))
                 .background(Color.LightGray),
             contentAlignment = Alignment.Center
@@ -60,16 +54,15 @@ fun UserPicture(
                     .fillMaxSize()
                     .background(
                         Brush.verticalGradient(
-                            colors = listOf(Color.Transparent, Color.Black, Color.Black),
-                            startY = 250F,
+                            colors = listOf(Color.Transparent, Color.Black),
+                            startY = size.value * 2f,
                             tileMode = TileMode.Clamp
                         )
                     )
-                    .border(BorderStroke(5.dp, color = Color.Black), RoundedCornerShape(100.dp))
             )
             CustomText(
                 text = "$userName $userSurname".trim(),
-                fontSize = 10.sp,
+                fontSize = (size.value / 15f).sp,
                 color = Color.White,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -77,7 +70,7 @@ fun UserPicture(
                     .padding(bottom = 16.dp)
             )
         }
-    }
+
 }
 
 @Preview

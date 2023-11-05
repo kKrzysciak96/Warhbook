@@ -89,7 +89,12 @@ class UserDataViewModel @Inject constructor(
                 }
             }
 
-            is UserDataScreenEvent.OnNextScreenClick -> {}
+            is UserDataScreenEvent.OnNextScreenClick -> {
+                job = null
+                job = viewModelScope.launch {
+                    _uiEvent.send(UiEvent.OnNextScreen(event.route))
+                }
+            }
 
             UserDataScreenEvent.OnPhotoClick -> {
                 state = state.copy(isChoosePhotoDialogVisible = !state.isChoosePhotoDialogVisible)

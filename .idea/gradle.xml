@@ -24,6 +24,10 @@
             <option value="$PROJECT_DIR$/core_data" />
             <option value="$PROJECT_DIR$/core_domain" />
             <option value="$PROJECT_DIR$/core_ui" />
+            <option value="$PROJECT_DIR$/notes" />
+            <option value="$PROJECT_DIR$/notes/notes_data" />
+            <option value="$PROJECT_DIR$/notes/notes_domain" />
+            <option value="$PROJECT_DIR$/notes_presentation" />
             <option value="$PROJECT_DIR$/photo" />
             <option value="$PROJECT_DIR$/photo/photo_data" />
             <option value="$PROJECT_DIR$/photo/photo_domain" />

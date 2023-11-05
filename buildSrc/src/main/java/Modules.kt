@@ -20,4 +20,8 @@ object Modules {
     const val book_domain = ":book:book_domain"
     const val book_data = ":book:book_data"
     const val book_presentation = ":book_presentation"
+
+    const val notes_domain = ":notes:notes_domain"
+    const val notes_data = ":notes:notes_data"
+    const val notes_presentation = ":notes_presentation"
 }

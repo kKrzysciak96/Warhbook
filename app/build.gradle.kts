@@ -86,6 +86,9 @@ dependencies {
     implementation(project(Modules.photo_domain))
     implementation(project(Modules.photo_presentation))
 
+    implementation(project(Modules.notes_data))
+    implementation(project(Modules.notes_domain))
+    implementation(project(Modules.notes_presentation))
 
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.lifecycleRuntime)
@@ -94,14 +97,14 @@ dependencies {
     implementation(Coil.coilCompose)
 
     implementation(Google.material)
+//
+//    implementation(Retrofit.okHttp)
+//    implementation(Retrofit.retrofit)
+//    implementation(Retrofit.okHttpLoggingInterceptor)
+//    implementation(Retrofit.moshiConverter)
 
-    implementation(Retrofit.okHttp)
-    implementation(Retrofit.retrofit)
-    implementation(Retrofit.okHttpLoggingInterceptor)
-    implementation(Retrofit.moshiConverter)
-
-    kapt(Room.roomCompiler)
-    implementation(Room.roomKtx)
-    implementation(Room.roomRuntime)
+//    kapt(Room.roomCompiler)
+//    implementation(Room.roomKtx)
+//    implementation(Room.roomRuntime)
     implementation(WorkManager.workManager)
 }

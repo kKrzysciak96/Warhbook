@@ -28,7 +28,7 @@ import com.eltescode.auth_presentation.utils.SignUpScreenEvent
 import com.eltescode.auth_presentation.utils.SignUpScreenState
 import com.eltescode.core_ui.R
 import com.eltescode.core_ui.components.BoxWithAnimatedBorder
-import com.eltescode.core_ui.components.backgroundBrush
+import com.eltescode.core_ui.components.silverBackgroundBrush
 import com.eltescode.core_ui.components.texFieldColors_1
 import com.eltescode.core_ui.ui.fontFamily_croissant
 import com.eltescode.core_ui.utils.UiEvent
@@ -78,7 +78,7 @@ fun SignUpScreen(state: SignUpScreenState, onEvent: (SignUpScreenEvent) -> Unit)
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundBrush()),
+            .background(silverBackgroundBrush()),
         contentAlignment = Alignment.Center
     ) {
         BoxWithAnimatedBorder(
