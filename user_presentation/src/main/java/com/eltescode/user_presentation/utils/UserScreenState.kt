@@ -7,6 +7,7 @@ data class UserScreenState(
     val userData: CustomUserData?,
     val isSettingsDialogVisible: Boolean = false,
     val isChoosePhotoDialogVisible: Boolean = false,
+    val isPhotoLoading: Boolean = false,
     val photoUri: Uri? = null,
 )
 

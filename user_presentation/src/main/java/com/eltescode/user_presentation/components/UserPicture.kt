@@ -21,24 +21,33 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.eltescode.core_ui.ui.SilverColors
 
 @Composable
 fun UserPicture(
     userPhoto: String,
     userName: String,
     userSurname: String,
+    isPhotoLoading: Boolean,
     modifier: Modifier = Modifier,
     size: Dp = 150.dp,
-    onClick: () -> Unit
-) {
+    onClick: () -> Unit,
 
-        Box(
-            modifier = modifier
-                .size(size)
-                .clip(RoundedCornerShape(100.dp))
-                .background(Color.LightGray),
-            contentAlignment = Alignment.Center
-        ) {
+    ) {
+
+    Box(
+        modifier = modifier
+            .size(size)
+            .clip(RoundedCornerShape(100.dp))
+            .background(Color.White),
+        contentAlignment = Alignment.Center
+    ) {
+        if (isPhotoLoading) {
+            CustomCircularProgressBar(
+                modifier = Modifier.size(100.dp),
+                loadingColor = SilverColors.color979c9f
+            )
+        } else {
             AsyncImage(
                 model = userPhoto,
                 contentDescription = null,
@@ -49,33 +58,34 @@ fun UserPicture(
                         onClick()
                     }
             )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(Color.Transparent, Color.Black),
-                            startY = size.value * 2f,
-                            tileMode = TileMode.Clamp
-                        )
-                    )
-            )
-            CustomText(
-                text = "$userName $userSurname".trim(),
-                fontSize = (size.value / 15f).sp,
-                color = Color.White,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 16.dp)
-            )
         }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, Color.Black),
+                        startY = size.value * 2f,
+                        tileMode = TileMode.Clamp
+                    )
+                )
+        )
+        CustomText(
+            text = "$userName $userSurname".trim(),
+            fontSize = (size.value / 15f).sp,
+            color = Color.White,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp)
+        )
+    }
 
 }
 
 @Preview
 @Composable
-fun UserPicture() {
-    UserPicture("", "Admin", "Admin") {}
+private fun UserPicture() {
+    UserPicture("", "Admin", "Admin", false) {}
 
 }

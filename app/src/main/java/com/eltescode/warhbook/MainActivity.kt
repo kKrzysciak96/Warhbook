@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
                     content = {
                         NavHost(
                             navController = navController,
-                            startDestination = Routes.SPLASH_SCREEN
+                            startDestination = Routes.SIGN_IN
                         )
                         {
 
@@ -133,8 +133,8 @@ class MainActivity : ComponentActivity() {
                                         "?noteId={noteId}&noteColor={noteColor}",
                                 arguments = listOf(
                                     navArgument(name = "noteId") {
-                                        type = NavType.IntType
-                                        defaultValue = -1
+                                        type = NavType.StringType
+                                        defaultValue = "-1"
                                     },
                                     navArgument(name = "noteColor") {
                                         type = NavType.IntType
@@ -146,7 +146,8 @@ class MainActivity : ComponentActivity() {
                                     snackBarHostState = snackBarHostState,
                                     noteColor = color
                                 ) {
-                                    navController.navigateUp()
+                                    navController.popBackStack(Routes.NOTES, true)
+                                    navController.navigate(Routes.NOTES)
                                 }
                             }
                             composable(route = Routes.YOUR_SHEETS) {

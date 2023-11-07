@@ -1,4 +1,4 @@
-package com.eltescode.notes.features.note.presentation.add_edit_note
+package com.eltescode.notes_presentation.add_edit_note
 
 sealed class UiEvent {
     data class ShowSnackBar(val message: String) : UiEvent()

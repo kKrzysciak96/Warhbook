@@ -8,8 +8,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eltescode.notes.features.note.presentation.add_edit_note.NoteTextFieldState
-import com.eltescode.notes.features.note.presentation.add_edit_note.UiEvent
 import com.eltescode.notes_domain.model.Note
+import com.eltescode.notes_domain.repository.Result
 import com.eltescode.notes_domain.use_cases.NoteUseCases
 import com.eltescode.notes_domain.utils.InvalidNoteException
 import com.eltescode.notes_presentation.mappers.mapToNote
@@ -18,6 +18,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,14 +48,14 @@ class AddEditNoteViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow: SharedFlow<UiEvent> = _eventFlow
 
-    private var currentNoteId: Int? = null
+    private var currentNoteId: UUID = UUID.randomUUID()
 
     init {
-        savedStateHandle.get<Int>("noteId")?.let { noteId ->
-            if (noteId != -1) {
+        savedStateHandle.get<String>("noteId")?.let { noteId ->
+            if (noteId != "-1") {
                 viewModelScope.launch {
-                    noteUseCases.getNoteUseCase(noteId)?.also { note: Note ->
-                        currentNoteId = note.id
+                    noteUseCases.getNoteUseCase(UUID.fromString(noteId))?.also { note: Note ->
+                        currentNoteId = UUID.fromString(note.noteId)
                         _noteTitle.value =
                             noteTitle.value.copy(text = note.title, isHintVisible = false)
                         _noteContent.value =
@@ -98,16 +99,29 @@ class AddEditNoteViewModel @Inject constructor(
             AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
                     try {
-                        noteUseCases.addNoteUseCase(
+                        val result = noteUseCases.addNoteUseCase(
                             NoteDisplayable(
                                 title = noteTitle.value.text,
                                 content = noteContent.value.text,
                                 timestamp = System.currentTimeMillis(),
                                 color = noteColor.value,
-                                id = currentNoteId,
+                                noteId = currentNoteId,
                             ).mapToNote()
                         )
-                        _eventFlow.emit(UiEvent.SaveNote)
+                        when (result) {
+                            is Result.Error -> {
+                                throw Exception(result.message)
+                            }
+
+                            Result.SuccessLocal -> {
+                                _eventFlow.emit(UiEvent.SaveNote)
+                            }
+
+                            Result.SuccessRemote -> {
+                                _eventFlow.emit(UiEvent.SaveNote)
+                            }
+                        }
+
                     } catch (e: InvalidNoteException) {
                         _eventFlow.emit(UiEvent.ShowSnackBar("Error: $e"))
                     }

@@ -1,15 +1,16 @@
 package com.eltescode.notes_presentation.model
 
 import androidx.compose.ui.graphics.Color
+import java.util.UUID
 
 
 data class NoteDisplayable(
-    val id: Int? = null,
+    val noteId: UUID,
     val title: String,
     val content: String,
     val timestamp: Long,
     val color: Int,
-    val attachment: String = ""
+    val attachment: String = "",
 ) {
 
     companion object {

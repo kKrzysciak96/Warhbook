@@ -46,9 +46,7 @@ class UserDataViewModel @Inject constructor(
     private var job: Job? = null
 
     init {
-        Log.d("InitVm VM", "${uriHelper.oldUri}")
         refreshUserData()
-
         viewModelScope.launch {
             uriHelper.uriFlow.collect {
                 doWork(it)
@@ -57,7 +55,10 @@ class UserDataViewModel @Inject constructor(
     }
 
     private fun doWork(photoUri: Uri?) {
+        Log.d("VIEWMODEL", "${state.isPhotoLoading}")
         photoUri?.let { uri ->
+            onEvent(UserDataScreenEvent.OnStarPhotoLoading)
+            Log.d("VIEWMODEL", "${state.isPhotoLoading}")
             job = null
             job = viewModelScope.launch {
                 val request = photoOneTimeWorkRequestBuilder(uri)
@@ -134,10 +135,14 @@ class UserDataViewModel @Inject constructor(
                         uploadUserPhoto(event.bytes)
                             .onSuccess { photoUrl ->
                                 state =
-                                    state.copy(userData = userData.copy(photo = photoUrl.toString()))
+                                    state.copy(
+                                        userData = userData.copy(photo = photoUrl.toString()),
+                                        isPhotoLoading = false
+                                    )
                                 handleEditUserDataResult(editUserData())
                             }
                             .onFailure { throwable ->
+                                state = state.copy(isPhotoLoading = false)
                                 val message = throwable.message.toString()
                                 _uiEvent.send(UiEvent.ShowSnackBar(UiText.DynamicString(message)))
                             }
@@ -183,6 +188,10 @@ class UserDataViewModel @Inject constructor(
                 job = viewModelScope.launch {
                     _photoEvent.send(event)
                 }
+            }
+
+            UserDataScreenEvent.OnStarPhotoLoading -> {
+                state = state.copy(isPhotoLoading = true)
             }
         }
     }

@@ -11,15 +11,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -29,7 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.work.WorkManager
 import com.eltescode.core_ui.components.silverBackgroundBrush
-import com.eltescode.user_presentation.components.BaseCard
+import com.eltescode.user_presentation.components.CustomCard
+import com.eltescode.user_presentation.components.CustomLazyVerticalGrid
 import com.eltescode.user_presentation.components.PhotoChooserDialog
 import com.eltescode.user_presentation.components.SettingsDialog
 import com.eltescode.user_presentation.components.SettingsIcon
@@ -63,6 +60,7 @@ fun UserDataScreen(
             if (isPhotoTaken) {
                 if (state.photoUri != null) {
                     val request = photoOneTimeWorkRequestBuilder(state.photoUri)
+                    viewModel.onEvent(UserDataScreenEvent.OnStarPhotoLoading)
                     viewModel.updateWorkId(request.id)
                     viewModel.onEvent(
                         UserDataScreenEvent.PhotoDialogEvents.OnWorkManagerEnqueue(
@@ -77,6 +75,7 @@ fun UserDataScreen(
         contract = ActivityResultContracts.OpenDocument(),
         onResult = { photoUri ->
             if (photoUri != null) {
+                viewModel.onEvent(UserDataScreenEvent.OnStarPhotoLoading)
                 val request = photoOneTimeWorkRequestBuilder(photoUri)
                 viewModel.updateWorkId(request.id)
                 viewModel.onEvent(UserDataScreenEvent.PhotoDialogEvents.OnWorkManagerEnqueue(request))
@@ -163,31 +162,26 @@ fun UserDataScreen(state: UserScreenState, onEvent: (UserDataScreenEvent) -> Uni
                 userPhoto = state.userData?.photo ?: "",
                 userName = state.userData?.name ?: "",
                 userSurname = state.userData?.surname ?: "",
+                isPhotoLoading = state.isPhotoLoading,
                 onClick = {
                     onEvent(UserDataScreenEvent.OnPhotoClick)
                 }
             )
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
+            CustomLazyVerticalGrid(
+
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = 16.dp, bottom = 35.dp, start = 8.dp, end = 8.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                UserScreens.values().forEach {
-                    item {
-                        BaseCard(
-                            text = stringResource(id = it.screenNameRes),
-                            modifier = Modifier
-                                .size(125.dp)
-                                .padding(3.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .clickable { onEvent(UserDataScreenEvent.OnNextScreenClick(it.route)) },
-                            fontSize = 18.sp
-                        )
-                    }
-                }
+                cardData = UserScreens.values(),
+            ) { resource, route ->
+                CustomCard(
+                    text = stringResource(id = resource),
+                    modifier = Modifier
+                        .size(150.dp)
+                        .padding(4.dp)
+                        .clickable { onEvent(UserDataScreenEvent.OnNextScreenClick(route)) },
+                    fontSize = 18.sp
+                )
             }
         }
 

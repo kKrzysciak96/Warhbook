@@ -23,4 +23,6 @@ dependencies {
     implementation(Firebase.firebaseAuth)
     implementation(Firebase.firebaseFirestore)
     implementation(Firebase.firebaseStorage)
+
+    implementation(DataStore.dataStore)
 }

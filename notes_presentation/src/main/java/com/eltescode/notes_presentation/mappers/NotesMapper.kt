@@ -2,9 +2,10 @@ package com.eltescode.notes_presentation.mappers
 
 import com.eltescode.notes_domain.model.Note
 import com.eltescode.notes_presentation.model.NoteDisplayable
+import java.util.UUID
 
 fun Note.mapToNoteDisplayable() = NoteDisplayable(
-    id = id,
+    noteId = UUID.fromString(noteId),
     title = title,
     content = content,
     timestamp = timestamp,
@@ -13,7 +14,7 @@ fun Note.mapToNoteDisplayable() = NoteDisplayable(
 )
 
 fun NoteDisplayable.mapToNote() = Note(
-    id = id,
+    noteId = noteId.toString(),
     title = title,
     content = content,
     timestamp = timestamp,

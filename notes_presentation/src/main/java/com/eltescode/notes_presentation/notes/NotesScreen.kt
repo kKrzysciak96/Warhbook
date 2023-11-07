@@ -30,6 +30,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,6 +48,7 @@ import com.eltescode.notes_presentation.notes.comopnents.NoteItem
 import com.eltescode.notes_presentation.notes.comopnents.OrderSection
 import com.eltescode.notes_presentation.util.NotesEvent
 import com.eltescode.notes_presentation.util.NotesState
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -58,6 +60,7 @@ fun NotesScreen(
     val state = viewModel.state.value
 
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
@@ -65,22 +68,21 @@ fun NotesScreen(
                 is UiEvent.OnNextScreen -> {
                     onNextScreen(event.route)
                 }
-
                 is UiEvent.ShowSnackBar -> {
-                    snackBarHostState.currentSnackbarData?.dismiss()
+                    scope.launch {
+                        snackBarHostState.currentSnackbarData?.dismiss()
 
-                    val result = snackBarHostState.showSnackbar(
-                        message = event.message.asString(context),
-                        actionLabel = context.getString(R.string.undo),
-                        duration = SnackbarDuration.Long
-                    )
+                        val result = snackBarHostState.showSnackbar(
+                            message = event.message.asString(context),
+                            actionLabel = context.getString(R.string.undo),
+                            duration = SnackbarDuration.Long
+                        )
 
-                    if (result == SnackbarResult.ActionPerformed) {
-                        viewModel.onEvent(NotesEvent.RestoreNote)
+                        if (result == SnackbarResult.ActionPerformed) {
+                            viewModel.onEvent(NotesEvent.RestoreNote)
+                        }
                     }
-
                 }
-
                 else -> Unit
             }
         }
@@ -138,7 +140,12 @@ fun NotesScreen(state: NotesState, onEvent: (NotesEvent) -> Unit) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                onEvent(NotesEvent.OnAddEditNote(id = note.id, color = note.color))
+                                onEvent(
+                                    NotesEvent.OnAddEditNote(
+                                        id = note.noteId,
+                                        color = note.color
+                                    )
+                                )
                             },
                         onDeleteClick = {
                             onEvent(NotesEvent.DeleteNote(note))

@@ -2,9 +2,10 @@ package com.eltescode.notes_data.mappers
 
 import com.eltescode.notes_data.local.NoteCached
 import com.eltescode.notes_domain.model.Note
+import java.util.UUID
 
 fun Note.mapToNoteCached() = NoteCached(
-    id = id,
+    noteId = UUID.fromString(noteId),
     title = title,
     content = content,
     timestamp = timestamp,
@@ -13,7 +14,7 @@ fun Note.mapToNoteCached() = NoteCached(
 )
 
 fun NoteCached.mapToNote() = Note(
-    id = id,
+    noteId = noteId.toString(),
     title = title,
     content = content,
     timestamp = timestamp,

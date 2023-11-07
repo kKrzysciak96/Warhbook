@@ -9,6 +9,9 @@ sealed interface UserDataScreenEvent {
     object OnSettingsDialogDismiss : UserDataScreenEvent
     object OnSettingsSave : UserDataScreenEvent
     object OnPhotoClick : UserDataScreenEvent
+
+    object OnStarPhotoLoading : UserDataScreenEvent
+
     sealed interface PhotoDialogEvents : UserDataScreenEvent {
 
         object OnTakePhotoClick : PhotoDialogEvents

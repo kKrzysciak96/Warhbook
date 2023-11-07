@@ -34,7 +34,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.eltescode.notes.features.note.presentation.add_edit_note.UiEvent
 import com.eltescode.notes_presentation.add_edit_note.components.TransparentTextField
 import com.eltescode.notes_presentation.model.NoteDisplayable
 import kotlinx.coroutines.flow.collectLatest

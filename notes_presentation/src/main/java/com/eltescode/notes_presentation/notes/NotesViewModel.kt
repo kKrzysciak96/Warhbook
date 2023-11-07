@@ -1,5 +1,6 @@
 package com.eltescode.notes_presentation.notes
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -7,9 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.eltescode.core_ui.R
 import com.eltescode.core_ui.utils.UiEvent
 import com.eltescode.core_ui.utils.UiText
+import com.eltescode.notes_domain.model.Note
+import com.eltescode.notes_domain.repository.Result
 import com.eltescode.notes_domain.use_cases.NoteUseCases
 import com.eltescode.notes_domain.utils.NoteOrder
-import com.eltescode.notes_domain.utils.OrderType
 import com.eltescode.notes_presentation.mappers.mapToNote
 import com.eltescode.notes_presentation.mappers.mapToNoteDisplayable
 import com.eltescode.notes_presentation.model.NoteDisplayable
@@ -40,19 +42,52 @@ class NotesViewModel @Inject constructor(private val noteUseCases: NoteUseCases)
 
     private var job: Job? = null
 
+    private var job2: Job? = null
+
     init {
-        getNotes(NoteOrder.Date(OrderType.Descending))
+
+
+        viewModelScope.launch {
+            Log.d("SYNC", "${noteUseCases.checkSyncNeedUseCase()}")
+            if (noteUseCases.checkSyncNeedUseCase()) {
+                syncData()
+                getNotes()
+            } else {
+                getNotes()
+            }
+        }
     }
 
     fun onEvent(event: NotesEvent) {
         when (event) {
             is NotesEvent.DeleteNote -> {
                 job = null
-                job = viewModelScope.launch {
-                    noteUseCases.deleteNoteUseCase(event.note.mapToNote())
-                    recentlyDeletedNote = event.note
-                    _uiEvent.send(UiEvent.ShowSnackBar(UiText.StringResource(R.string.note_deleted)))
-                }
+                job =
+                    viewModelScope.launch {
+                        try {
+                            val result = noteUseCases.deleteNoteUseCase(event.note.mapToNote())
+                            when (result) {
+                                is Result.Error -> {
+                                    throw Exception(result.message)
+                                }
+
+                                Result.SuccessLocal -> {
+                                    recentlyDeletedNote = event.note
+                                    _uiEvent.send(UiEvent.ShowSnackBar(UiText.StringResource(R.string.note_deleted)))
+                                    getNotes()
+                                }
+
+                                Result.SuccessRemote -> {
+                                    recentlyDeletedNote = event.note
+                                    _uiEvent.send(UiEvent.ShowSnackBar(UiText.StringResource(R.string.note_deleted)))
+                                    getNotes()
+                                }
+
+                            }
+                        } catch (e: Exception) {
+                            _uiEvent.send(UiEvent.ShowSnackBar(UiText.StringResource(R.string.error_basic)))
+                        }
+                    }
             }
 
             is NotesEvent.Order -> {
@@ -61,7 +96,8 @@ class NotesViewModel @Inject constructor(private val noteUseCases: NoteUseCases)
                 ) {
                     return
                 }
-                getNotes(event.noteOrder)
+                _state.value = _state.value.copy(noteOrder = event.noteOrder)
+                sortNotes(state.value.notes.map { it.mapToNote() }, event.noteOrder)
             }
 
             is NotesEvent.RestoreNote -> {
@@ -69,6 +105,7 @@ class NotesViewModel @Inject constructor(private val noteUseCases: NoteUseCases)
                 job = viewModelScope.launch {
                     noteUseCases.addNoteUseCase(recentlyDeletedNote?.mapToNote() ?: return@launch)
                     recentlyDeletedNote = null
+                    getNotes()
                 }
             }
 
@@ -97,13 +134,22 @@ class NotesViewModel @Inject constructor(private val noteUseCases: NoteUseCases)
         }
     }
 
-    private fun getNotes(noteOrder: NoteOrder) {
+    private suspend fun getNotes() {
         getNotesJob?.cancel()
-        getNotesJob = noteUseCases.getNotesUseCase(noteOrder).onEach { notes ->
-            _state.value = state.value.copy(
-                notes = notes.map { it.mapToNoteDisplayable() },
-                noteOrder = noteOrder
-            )
+        getNotesJob = noteUseCases.getNotesUseCase().onEach { notes ->
+            sortNotes(notes, state.value.noteOrder)
         }.launchIn(viewModelScope)
+    }
+
+    private fun sortNotes(notes: List<Note>, noteOrder: NoteOrder) {
+        val sortedNotes =
+            noteUseCases.sortNotesUseCase(notes, noteOrder).map { it.mapToNoteDisplayable() }
+        _state.value = state.value.copy(
+            notes = sortedNotes,
+        )
+    }
+
+    private suspend fun syncData() {
+        noteUseCases.syncDataUseCase()
     }
 }
