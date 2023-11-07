@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -68,6 +69,7 @@ fun NotesScreen(
                 is UiEvent.OnNextScreen -> {
                     onNextScreen(event.route)
                 }
+
                 is UiEvent.ShowSnackBar -> {
                     scope.launch {
                         snackBarHostState.currentSnackbarData?.dismiss()
@@ -83,6 +85,7 @@ fun NotesScreen(
                         }
                     }
                 }
+
                 else -> Unit
             }
         }
@@ -90,13 +93,14 @@ fun NotesScreen(
 
     NotesScreen(
         state = state,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
     )
-
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NotesScreen(state: NotesState, onEvent: (NotesEvent) -> Unit) {
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -134,10 +138,11 @@ fun NotesScreen(state: NotesState, onEvent: (NotesEvent) -> Unit) {
             }
             Spacer(modifier = Modifier.height(16.dp))
             LazyColumn(modifier = Modifier.fillMaxSize(), content = {
-                items(state.notes) { note ->
+                items(items = state.notes, key = { item -> item.noteId }) { note ->
                     NoteItem(
                         note = note,
                         modifier = Modifier
+                            .animateItemPlacement()
                             .fillMaxWidth()
                             .clickable {
                                 onEvent(
@@ -150,7 +155,6 @@ fun NotesScreen(state: NotesState, onEvent: (NotesEvent) -> Unit) {
                         onDeleteClick = {
                             onEvent(NotesEvent.DeleteNote(note))
                         })
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
             })
         }

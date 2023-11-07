@@ -1,6 +1,5 @@
 package com.eltescode.notes_presentation.notes
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -42,13 +41,9 @@ class NotesViewModel @Inject constructor(private val noteUseCases: NoteUseCases)
 
     private var job: Job? = null
 
-    private var job2: Job? = null
 
     init {
-
-
         viewModelScope.launch {
-            Log.d("SYNC", "${noteUseCases.checkSyncNeedUseCase()}")
             if (noteUseCases.checkSyncNeedUseCase()) {
                 syncData()
                 getNotes()

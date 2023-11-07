@@ -7,7 +7,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eltescode.notes.features.note.presentation.add_edit_note.NoteTextFieldState
+import com.eltescode.core_ui.R
+import com.eltescode.core_ui.utils.UiText
 import com.eltescode.notes_domain.model.Note
 import com.eltescode.notes_domain.repository.Result
 import com.eltescode.notes_domain.use_cases.NoteUseCases
@@ -30,14 +31,14 @@ class AddEditNoteViewModel @Inject constructor(
 
     private val _noteTitle = mutableStateOf(
         NoteTextFieldState(
-            hint = "Enter title..."
+            hint = UiText.StringResource(R.string.enter_title_hint)
         )
     )
     val noteTitle: State<NoteTextFieldState> = _noteTitle
 
     private val _noteContent = mutableStateOf(
         NoteTextFieldState(
-            hint = "Enter some content..."
+            hint = UiText.StringResource(R.string.enter_content_hint)
         )
     )
     val noteContent: State<NoteTextFieldState> = _noteContent
@@ -57,9 +58,15 @@ class AddEditNoteViewModel @Inject constructor(
                     noteUseCases.getNoteUseCase(UUID.fromString(noteId))?.also { note: Note ->
                         currentNoteId = UUID.fromString(note.noteId)
                         _noteTitle.value =
-                            noteTitle.value.copy(text = note.title, isHintVisible = false)
+                            noteTitle.value.copy(
+                                text = note.title,
+                                isHintVisible = note.title.isBlank()
+                            )
                         _noteContent.value =
-                            noteContent.value.copy(text = note.content, isHintVisible = false)
+                            noteContent.value.copy(
+                                text = note.content,
+                                isHintVisible = note.content.isBlank()
+                            )
                         _noteColor.value = note.color
                     }
                 }
@@ -123,7 +130,7 @@ class AddEditNoteViewModel @Inject constructor(
                         }
 
                     } catch (e: InvalidNoteException) {
-                        _eventFlow.emit(UiEvent.ShowSnackBar("Error: $e"))
+                        _eventFlow.emit(UiEvent.ShowSnackBar(e.message.toString()))
                     }
                 }
             }

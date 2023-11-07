@@ -32,4 +32,7 @@
     <string name="note_deleted">Note deleted</string>
     <string name="undo">Undo</string>
     <string name="your_notes">Your notes</string>
+    <string name="search_photo_hint">Search photo…</string>
+    <string name="enter_content_hint">Enter some content…</string>
+    <string name="enter_title_hint">Enter title…</string>
 </resources>

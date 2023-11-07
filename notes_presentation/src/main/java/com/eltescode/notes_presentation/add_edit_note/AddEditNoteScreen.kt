@@ -1,6 +1,9 @@
 package com.eltescode.notes_presentation.add_edit_note
 
+import android.content.Context
 import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector4D
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,10 +35,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eltescode.notes_presentation.add_edit_note.components.TransparentTextField
 import com.eltescode.notes_presentation.model.NoteDisplayable
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -53,6 +58,8 @@ fun AddEditNoteScreen(
         remember { Animatable(Color(if (noteColor != -1) noteColor else viewModel.noteColor.value)) }
     val scope = rememberCoroutineScope()
 
+    val context = LocalContext.current
+
     LaunchedEffect(key1 = Unit, block = {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -68,8 +75,26 @@ fun AddEditNoteScreen(
         }
     })
 
+    AddEditNoteScreen(
+        titleState = titleState,
+        contentState = contentState,
+        noteBackgroundAnimatable = noteBackgroundAnimatable,
+        scope = scope,
+        context = context
+    )
 
+}
 
+@Composable
+private fun AddEditNoteScreen(
+    titleState: NoteTextFieldState,
+    contentState: NoteTextFieldState,
+    viewModel: AddEditNoteViewModel = hiltViewModel(),
+    noteBackgroundAnimatable: Animatable<Color, AnimationVector4D>,
+    scope: CoroutineScope,
+    context: Context
+
+) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 
         Column(
@@ -110,29 +135,27 @@ fun AddEditNoteScreen(
                                 }
                                 viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
                             }
-
                     )
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
             TransparentTextField(
                 text = titleState.text,
-                hint = titleState.hint,
+                hint = titleState.hint.asString(context),
                 onValueChange = { viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it)) },
                 onFocusChange = { viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it)) },
                 isHintVisible = titleState.isHintVisible,
                 singleLine = true,
-//                    textStyle = MaterialTheme.typography.h5
-            )
+
+                )
             Spacer(modifier = Modifier.height(16.dp))
             TransparentTextField(
                 text = contentState.text,
-                hint = contentState.hint,
+                hint = contentState.hint.asString(context),
                 onValueChange = { viewModel.onEvent(AddEditNoteEvent.EnteredContent(it)) },
                 onFocusChange = { viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it)) },
                 isHintVisible = contentState.isHintVisible,
                 singleLine = false,
-//                    textStyle = MaterialTheme.typography.body1,
                 modifier = Modifier.fillMaxHeight()
             )
         }
@@ -146,5 +169,4 @@ fun AddEditNoteScreen(
             Icon(imageVector = Icons.Default.Save, contentDescription = null)
         }
     }
-
 }

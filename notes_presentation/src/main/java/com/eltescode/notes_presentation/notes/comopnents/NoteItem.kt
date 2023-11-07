@@ -68,4 +68,5 @@ fun NoteItem(
             Icon(imageVector = Icons.Default.Delete, contentDescription = null)
         }
     }
+    Spacer(modifier = Modifier.height(16.dp))
 }
