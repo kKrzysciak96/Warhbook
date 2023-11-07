@@ -9,8 +9,6 @@ import com.eltescode.core_ui.ui.SilverColors.Companion.color4c4e50
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-
-
 @Composable
 fun texFieldColors_1(): TextFieldColors {
 
@@ -22,6 +20,21 @@ fun texFieldColors_1(): TextFieldColors {
         focusedLabelColor = Color.Black,
         focusedLeadingIconColor = Color.Black,
         cursorColor = Color.Black
+    )
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun texFieldColors_2(): TextFieldColors {
+
+    return TextFieldDefaults.textFieldColors(
+        containerColor = Color.Transparent,
+        focusedIndicatorColor = Color.Transparent,
+        unfocusedIndicatorColor = Color.Transparent,
+        unfocusedSupportingTextColor = Color.Black,
+        textColor = Color.Black,
+        focusedLabelColor = Color.Black,
+        focusedLeadingIconColor = Color.Black,
+        cursorColor = Color.Black
     )
 }

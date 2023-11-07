@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <application
+
+<application
         android:name=".app.HiltApp"
         tools:replace="android:name"
         android:allowBackup="true"

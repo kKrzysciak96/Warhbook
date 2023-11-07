@@ -28,5 +28,11 @@
     <string name="career_screen_name">Career Creator</string>
     <string name="something_screen_name">Something</string>
     <string name="new_character_screen_name">New Character</string>
-    <string name="profession_creator_screen_name">Something</string>
+    <string name="profession_creator_screen_name">Profession Creator</string>
+    <string name="note_deleted">Note deleted</string>
+    <string name="undo">Undo</string>
+    <string name="your_notes">Your notes</string>
+    <string name="search_photo_hint">Search photo…</string>
+    <string name="enter_content_hint">Enter some content…</string>
+    <string name="enter_title_hint">Enter title…</string>
 </resources>

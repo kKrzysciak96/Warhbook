@@ -15,5 +15,25 @@ class SilverColors {
         val color84898b = Color(0XFF84898b)
         val color979c9f = Color(0XFF979c9f)
         val colorAab0b3 = Color(0XFFaab0b3)
+        val colorffffff = Color(0XFFffffff)
+    }
+}
+
+class GreenColors {
+    companion object {
+
+        val colorCfea75 = Color(0XFFcfea75)
+        val color008c15 = Color(0XFF008c15)
+
+    }
+}
+
+class BlueColors {
+    companion object {
+
+        val color91b1fd = Color(0XFF91b1fd)
+        val color4e6db1 = Color(0XFF4e6db1)
+
+
     }
 }

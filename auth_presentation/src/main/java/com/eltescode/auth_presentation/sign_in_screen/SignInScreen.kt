@@ -40,7 +40,7 @@ import com.eltescode.auth_presentation.utils.SignInScreenEvent
 import com.eltescode.auth_presentation.utils.SignInScreenState
 import com.eltescode.core_ui.R
 import com.eltescode.core_ui.components.BoxWithAnimatedBorder
-import com.eltescode.core_ui.components.backgroundBrush
+import com.eltescode.core_ui.components.silverBackgroundBrush
 import com.eltescode.core_ui.components.texFieldColors_1
 import com.eltescode.core_ui.ui.fontFamily_croissant
 import com.eltescode.core_ui.utils.UiEvent
@@ -65,9 +65,6 @@ fun SignInScreen(
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                UiEvent.OnNavigateUp -> {
-
-                }
 
                 is UiEvent.ShowSnackBar -> {
                     snackBarHostState.currentSnackbarData?.dismiss()
@@ -83,6 +80,8 @@ fun SignInScreen(
                 is UiEvent.OnNextScreen -> {
                     onNextScreen()
                 }
+
+                else -> Unit
             }
         }
     }
@@ -103,7 +102,7 @@ fun SignInScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundBrush()),
+            .background(silverBackgroundBrush()),
         contentAlignment = Alignment.Center
     ) {
         Button(

@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.res.imageResource
 import com.eltescode.core_ui.R
+import com.eltescode.core_ui.ui.SilverColors.Companion.color979c9f
 
 @Composable
 fun backgroundShaderBrush(): ShaderBrush {
@@ -23,9 +24,9 @@ fun backgroundShaderBrush(): ShaderBrush {
 }
 
 @Composable
-fun backgroundBrush(): Brush {
+fun silverBackgroundBrush(): Brush {
     return Brush.linearGradient(
-        colors = listOf(Color.White, Color(0XFF979c9f)),
+        colors = listOf(Color.White, color979c9f),
         start = Offset.Zero,
         end = Offset.Infinite
     )
